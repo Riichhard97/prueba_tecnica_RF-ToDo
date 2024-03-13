@@ -1,0 +1,272 @@
+﻿@using BlazorApp.App.Services;
+@using CurrieTechnologies.Razor.SweetAlert2;
+@using PruebaTecnica.Shared.Dtos;
+@using PruebaTecnica.Shared.RequestModels.Acitivity;
+@inject IGoalServices GoalService;
+@inject IActivityServices ActivityServices;
+@inject SweetAlertService Swal;
+
+
+<div style="background-color:white;">
+
+    <div class="p-1 background-color-primary" style="color:white"> Configurar plan de  compesacion</div>
+
+    <div style="border:1px solid green;">
+        <div class="p-2 border-color-primary " style="border-top:1px solid green;border-bottom:1px solid green;">
+            <button class="btn background-color-primary" disabled=@(GoalId == 0) @onclick=OnNewActivity>Agregar Tarea</button>
+            <button class="btn background-color-primary" disabled=@(GoalId == 0) @onclick=OnSetComplete>Completar Tarea</button>
+            <button class="btn background-color-primary" disabled=@(GoalId == 0) @onclick=OnUpdateActivity>Editar</button>
+            <button class="btn background-color-primary" disabled=@(GoalId == 0) @onclick=OnDeleteActivity>Eliminar</button>
+        </div>
+        <div class="p-2">
+        @if (GoalId == 0)
+        {
+            <span >Seleccione una meta para visualizar sus actividades</span>
+        } else
+        {
+            <table class="table">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col" colspan="2" class="border-color-primary">
+                            <input type="checkbox"  @onchange="ToggleAllCheckboxes" />
+                        </th>
+                        <th scope="col" class="border-color-primary">
+                            <input type="text" @bind="@nameFilter" placeholder="Buscar por nombre" />
+                        </th>
+                        <th scope="col" class="border-color-primary">
+                            <input type="date" @bind="@dateFilter" />
+                        </th>
+                        <th scope="col" class="border-color-primary">
+                            <select @bind="@statusFilter">
+                                <option value="">Todos</option>
+                                <option value="Completed">Completada</option>
+                                <option value="Open">Abierta</option>
+                            </select>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (activities.Count > 0)
+                    {
+                        @foreach (var item in activities)
+                        {
+                            <tr style="@((item.Selected) ? "background-color:#c2dbff" : "")"
+                            >
+                                <td><input type="checkbox" @bind="@item.Selected"/></td>
+                                <td>#</td>
+                                <td>@item.Name</td>
+                                    <td>@item.DateCreated</td>
+                                    <td>@(item.Completed ? "Completada" : "Abierta")</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        }
+        </div>
+        <div style="border-top:1px solid green;border-bottom:1px solid green;">
+                <button> > </button>
+                <button> => </button>
+        </div>
+        @GoalId
+    </div>
+</div>
+
+<Modal @ref="modal" Title="@modalTitle" OnButtonClickAccept="@OnModalAccept">
+    <div>
+        <input class="form-control" @bind-value="@inputValue" />
+    </div>
+</Modal>
+
+@code {
+    [Parameter] public Action<GoalDto> OnSelectGoal { get; set; }
+    [Parameter] public int GoalId { get; set; }
+
+    public GoalDto goal;
+    Modal modal;
+    string modalTitle;
+    string inputValue;
+    bool isEditMode;
+    ActivityDtoAndCheckbox activityToEdit;
+
+    List<ActivityDtoAndCheckbox> activities = new List<ActivityDtoAndCheckbox>();
+
+    // Filtros
+    string nameFilter;
+    DateTime? dateFilter;
+    string statusFilter;
+    bool selectAll;
+
+    // Filtro y lista filtrada
+    List<ActivityDtoAndCheckbox> filteredItems => activities
+        //.Where(i =>
+        //(string.IsNullOrWhiteSpace(nameFilter) || i.FirstName.Contains(nameFilter, StringComparison.OrdinalIgnoreCase)) &&
+        //(!dateFilter.HasValue || i.Date == dateFilter.Value) &&
+        //(string.IsNullOrWhiteSpace(statusFilter) || i.Status == statusFilter))
+        .ToList();
+
+    void OnNewActivity()
+    {
+        OpenModal("Nueva actividad");
+    }
+
+    async void OnUpdateActivity()
+    {
+        var activitiesSelected = activities.Count((activity) => activity.Selected);
+        if (activitiesSelected > 1 || activitiesSelected < 1)
+        {
+            await Swal.FireAsync(new SweetAlertOptions
+                {
+                    Title = "Advertencia",
+                    Text = "Debes seleccionar una sola actividad para poder editarla.",
+                    Icon = SweetAlertIcon.Warning,
+                    ConfirmButtonText = "Aceptar",
+                    ConfirmButtonColor = "rgb(51, 102, 102)"
+                });
+            return;
+        }
+
+        isEditMode = true;
+        activityToEdit = activities.FirstOrDefault(activity=>activity.Selected);
+        inputValue = activityToEdit.Name;
+        OpenModal("Editar actividad");
+    }
+
+    async void OnSetComplete()
+    {
+        var activitiesSelectedIds = activities.Where((activity) => activity.Selected).Select(activity=>activity.Id);
+        if(activitiesSelectedIds.Count() == 0)
+        {
+            await Swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "Advertencia",
+                Text = "Debes seleccionar al menos una actividad para poder marcarla completada.",
+                Icon = SweetAlertIcon.Warning,
+                ConfirmButtonText = "Aceptar",
+                ConfirmButtonColor = "rgb(51, 102, 102)"
+            });
+            return;
+        }
+
+        await ActivityServices.SetCompleteActivities(new SetCompleteActivitiesRequestModel() {Ids = activitiesSelectedIds.ToList(),isComplete = true });
+        await GetGoalById();
+        await Swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "Confirmacion",
+                Text = "Se han actualizado las actividades con exito!",
+                Icon = SweetAlertIcon.Success,
+                TimerProgressBar = true,
+                ShowConfirmButton = false,
+                Timer = 1000
+            });
+        return;
+    }
+
+    async void OnDeleteActivity()
+    {
+        var activitiesSelectedIds = activities.Where((activity) => activity.Selected).Select(activity => activity.Id);
+        if (activitiesSelectedIds.Count() == 0)
+        {
+            await Swal.FireAsync(new SweetAlertOptions
+                {
+                    Title = "Advertencia",
+                    Text = "Debes seleccionar al menos una actividad para poder eliminar.",
+                    Icon = SweetAlertIcon.Warning,
+                    ConfirmButtonText = "Aceptar",
+                    ConfirmButtonColor = "rgb(51, 102, 102)"
+                });
+            return;
+        }
+        await ActivityServices.DeleteList(new DeleteActivitiesRequestModel() {Ids = activitiesSelectedIds.ToList() });
+        await Swal.FireAsync(new SweetAlertOptions
+        {
+            Title = "Confirmacion",
+            Text = "Se han eliminado las actividades con exito!",
+            Icon = SweetAlertIcon.Success,
+            TimerProgressBar = true,
+            ShowConfirmButton = false,
+            Timer = 1000
+        });
+        await GetGoalById();
+        StateHasChanged();
+    }
+
+    async void OnModalAccept()
+    {
+        if (isEditMode)
+            await Update();
+        else
+            await Create();
+
+        string text = isEditMode ? "Se ha editado con exito!" : "Se ha agregado con exito!";
+        await Swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "Confirmacion",
+                Text = text,
+                Icon = SweetAlertIcon.Success,
+                TimerProgressBar = true,
+                ShowConfirmButton = false,
+                Timer = 1000
+            });
+        return;
+        StateHasChanged();
+    }
+
+    async Task Update()
+    {
+        await ActivityServices.Update(activityToEdit.Id, new UpdateActivityRequestModel { Name = inputValue });
+        modal.Active = false;
+        inputValue = string.Empty;
+        await GetGoalById();
+    }
+
+    async Task Create()
+    {
+        await ActivityServices.Add(new AddActivityRequestModel { Name = inputValue ,GoalId = goal.Id});
+        modal.Active = false;
+        inputValue = string.Empty;
+        await GetGoalById();
+    }
+    protected override async Task OnParametersSetAsync()
+    {
+        await GetGoalById();
+    }
+
+    async Task GetGoalById()
+    {
+        if (GoalId > 0)
+        {
+            goal = await GoalService.GetById(GoalId);
+            activities = goal.Activities.Select(activity => new ActivityDtoAndCheckbox
+            {
+                Id = activity.Id,
+                Name = activity.Name,
+                DateCreated = activity.DateCreated,
+                Completed = activity.Completed,
+                Selected = false
+            }).ToList();
+        }
+        StateHasChanged();
+    }
+
+    void ToggleAllCheckboxes(ChangeEventArgs e)
+    {
+        bool newValue = (bool)e.Value;
+        foreach (var item in filteredItems)
+        {
+            item.Selected = newValue;
+        }
+    }
+
+    public class ActivityDtoAndCheckbox : ActivityDto
+    {
+        public bool Selected { get; set; }
+    }
+
+    void OpenModal(string title)
+    {
+        modalTitle = title;
+        modal.Active = true;
+    }
+}
+

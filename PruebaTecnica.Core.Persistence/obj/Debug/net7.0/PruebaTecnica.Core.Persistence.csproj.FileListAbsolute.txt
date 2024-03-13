@@ -1,0 +1,15 @@
+C:\Users\Gamer\source\repos\BlazorApp\PruebaTecnica.Core.Persistence\bin\Debug\net7.0\PruebaTecnica.Core.Persistence.deps.json
+C:\Users\Gamer\source\repos\BlazorApp\PruebaTecnica.Core.Persistence\bin\Debug\net7.0\PruebaTecnica.Core.Persistence.dll
+C:\Users\Gamer\source\repos\BlazorApp\PruebaTecnica.Core.Persistence\bin\Debug\net7.0\PruebaTecnica.Core.Persistence.pdb
+C:\Users\Gamer\source\repos\BlazorApp\PruebaTecnica.Core.Persistence\bin\Debug\net7.0\PruebaTecnica.Core.Domain.dll
+C:\Users\Gamer\source\repos\BlazorApp\PruebaTecnica.Core.Persistence\bin\Debug\net7.0\PruebaTecnica.Core.Domain.pdb
+C:\Users\Gamer\source\repos\BlazorApp\PruebaTecnica.Core.Persistence\obj\Debug\net7.0\PruebaTecnica.Core.Persistence.csproj.AssemblyReference.cache
+C:\Users\Gamer\source\repos\BlazorApp\PruebaTecnica.Core.Persistence\obj\Debug\net7.0\PruebaTecnica.Core.Persistence.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Gamer\source\repos\BlazorApp\PruebaTecnica.Core.Persistence\obj\Debug\net7.0\PruebaTecnica.Core.Persistence.AssemblyInfoInputs.cache
+C:\Users\Gamer\source\repos\BlazorApp\PruebaTecnica.Core.Persistence\obj\Debug\net7.0\PruebaTecnica.Core.Persistence.AssemblyInfo.cs
+C:\Users\Gamer\source\repos\BlazorApp\PruebaTecnica.Core.Persistence\obj\Debug\net7.0\PruebaTecnica.Core.Persistence.csproj.CoreCompileInputs.cache
+C:\Users\Gamer\source\repos\BlazorApp\PruebaTecnica.Core.Persistence\obj\Debug\net7.0\PruebaTecnica.Core.Persistence.csproj.CopyComplete
+C:\Users\Gamer\source\repos\BlazorApp\PruebaTecnica.Core.Persistence\obj\Debug\net7.0\PruebaTecnica.Core.Persistence.dll
+C:\Users\Gamer\source\repos\BlazorApp\PruebaTecnica.Core.Persistence\obj\Debug\net7.0\refint\PruebaTecnica.Core.Persistence.dll
+C:\Users\Gamer\source\repos\BlazorApp\PruebaTecnica.Core.Persistence\obj\Debug\net7.0\PruebaTecnica.Core.Persistence.pdb
+C:\Users\Gamer\source\repos\BlazorApp\PruebaTecnica.Core.Persistence\obj\Debug\net7.0\ref\PruebaTecnica.Core.Persistence.dll

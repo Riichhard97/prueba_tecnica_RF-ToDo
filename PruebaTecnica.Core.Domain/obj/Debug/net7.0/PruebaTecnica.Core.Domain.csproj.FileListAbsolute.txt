@@ -1,0 +1,12 @@
+C:\Users\Gamer\source\repos\BlazorApp\PruebaTecnica.Core.Domain\bin\Debug\net7.0\PruebaTecnica.Core.Domain.deps.json
+C:\Users\Gamer\source\repos\BlazorApp\PruebaTecnica.Core.Domain\bin\Debug\net7.0\PruebaTecnica.Core.Domain.dll
+C:\Users\Gamer\source\repos\BlazorApp\PruebaTecnica.Core.Domain\bin\Debug\net7.0\PruebaTecnica.Core.Domain.pdb
+C:\Users\Gamer\source\repos\BlazorApp\PruebaTecnica.Core.Domain\obj\Debug\net7.0\PruebaTecnica.Core.Domain.csproj.AssemblyReference.cache
+C:\Users\Gamer\source\repos\BlazorApp\PruebaTecnica.Core.Domain\obj\Debug\net7.0\PruebaTecnica.Core.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Gamer\source\repos\BlazorApp\PruebaTecnica.Core.Domain\obj\Debug\net7.0\PruebaTecnica.Core.Domain.AssemblyInfoInputs.cache
+C:\Users\Gamer\source\repos\BlazorApp\PruebaTecnica.Core.Domain\obj\Debug\net7.0\PruebaTecnica.Core.Domain.AssemblyInfo.cs
+C:\Users\Gamer\source\repos\BlazorApp\PruebaTecnica.Core.Domain\obj\Debug\net7.0\PruebaTecnica.Core.Domain.csproj.CoreCompileInputs.cache
+C:\Users\Gamer\source\repos\BlazorApp\PruebaTecnica.Core.Domain\obj\Debug\net7.0\PruebaTecnica.Core.Domain.dll
+C:\Users\Gamer\source\repos\BlazorApp\PruebaTecnica.Core.Domain\obj\Debug\net7.0\refint\PruebaTecnica.Core.Domain.dll
+C:\Users\Gamer\source\repos\BlazorApp\PruebaTecnica.Core.Domain\obj\Debug\net7.0\PruebaTecnica.Core.Domain.pdb
+C:\Users\Gamer\source\repos\BlazorApp\PruebaTecnica.Core.Domain\obj\Debug\net7.0\ref\PruebaTecnica.Core.Domain.dll

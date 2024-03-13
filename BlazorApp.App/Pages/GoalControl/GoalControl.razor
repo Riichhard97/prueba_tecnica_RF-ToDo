@@ -1,0 +1,40 @@
+﻿@page "/"
+@using BlazorApp.App.Pages.GoalControl.Components
+@using PruebaTecnica.Shared.Dtos;
+
+
+<div class="wrapper" style="background-color: #e4e4e4">
+  <header class="header"> 
+      <div style="display: flex;
+        padding-top: 10px !important;
+        padding: 5px;
+        border-radius: 10px;">
+        <div style="width: 5px;" class="background-color-primary">
+        </div>
+        <div style="width: -webkit-fill-available;
+        background-color: white;
+        padding: 5px;">
+            Control de metas
+        </div>
+      </div>
+  </header>
+
+  <div style="display:flex">
+        <div style="width: 30%; padding: 10px;">
+            <GoalList OnSelectGoal=@OnSelectGoal ></GoalList>
+      </div>
+        <div style="width: -webkit-fill-available;padding:5px">
+            <GoalConfigActivities GoalId="@GoalId"></GoalConfigActivities>
+        </div>
+  </div>
+</div>
+@code {
+    int GoalId = 0;
+
+    void OnSelectGoal(GoalDto goal)
+    {
+        GoalId = goal.Id;
+        StateHasChanged();
+    }
+
+}

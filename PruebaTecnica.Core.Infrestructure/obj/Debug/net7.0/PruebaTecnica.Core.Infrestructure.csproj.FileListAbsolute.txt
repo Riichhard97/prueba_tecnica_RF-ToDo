@@ -1,0 +1,12 @@
+C:\Users\Gamer\source\repos\BlazorApp\PruebaTecnica.Core.Infrestructure\bin\Debug\net7.0\PruebaTecnica.Core.Infrestructure.deps.json
+C:\Users\Gamer\source\repos\BlazorApp\PruebaTecnica.Core.Infrestructure\bin\Debug\net7.0\PruebaTecnica.Core.Infrestructure.dll
+C:\Users\Gamer\source\repos\BlazorApp\PruebaTecnica.Core.Infrestructure\bin\Debug\net7.0\PruebaTecnica.Core.Infrestructure.pdb
+C:\Users\Gamer\source\repos\BlazorApp\PruebaTecnica.Core.Infrestructure\obj\Debug\net7.0\PruebaTecnica.Core.Infrestructure.csproj.AssemblyReference.cache
+C:\Users\Gamer\source\repos\BlazorApp\PruebaTecnica.Core.Infrestructure\obj\Debug\net7.0\PruebaTecnica.Core.Infrestructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Gamer\source\repos\BlazorApp\PruebaTecnica.Core.Infrestructure\obj\Debug\net7.0\PruebaTecnica.Core.Infrestructure.AssemblyInfoInputs.cache
+C:\Users\Gamer\source\repos\BlazorApp\PruebaTecnica.Core.Infrestructure\obj\Debug\net7.0\PruebaTecnica.Core.Infrestructure.AssemblyInfo.cs
+C:\Users\Gamer\source\repos\BlazorApp\PruebaTecnica.Core.Infrestructure\obj\Debug\net7.0\PruebaTecnica.Core.Infrestructure.csproj.CoreCompileInputs.cache
+C:\Users\Gamer\source\repos\BlazorApp\PruebaTecnica.Core.Infrestructure\obj\Debug\net7.0\PruebaTecnica.Core.Infrestructure.dll
+C:\Users\Gamer\source\repos\BlazorApp\PruebaTecnica.Core.Infrestructure\obj\Debug\net7.0\refint\PruebaTecnica.Core.Infrestructure.dll
+C:\Users\Gamer\source\repos\BlazorApp\PruebaTecnica.Core.Infrestructure\obj\Debug\net7.0\PruebaTecnica.Core.Infrestructure.pdb
+C:\Users\Gamer\source\repos\BlazorApp\PruebaTecnica.Core.Infrestructure\obj\Debug\net7.0\ref\PruebaTecnica.Core.Infrestructure.dll

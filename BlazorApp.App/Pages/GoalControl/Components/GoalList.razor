@@ -1,0 +1,104 @@
+﻿@using BlazorApp.App.Pages.GoalControl.Modals
+@using BlazorApp.App.Services
+@using PruebaTecnica.Shared.Dtos
+@using PruebaTecnica.Shared.RequestModels
+@using PruebaTecnica.Shared.RequestModels.Goal;
+@inject IGoalServices GoalService
+
+<div style="background-color: white;">
+    <button class="btn btn-primary background-color-primary m-1" @onclick="OnNewGoal">
+        <i class="bi bi-plus"></i>
+        Nueva meta
+    </button>
+
+    @foreach (var goal in listGoals)
+    {
+        <div class="card" style="width: 100%; cursor:pointer" @onclick="() => OnSelectGoal(goal)">
+            <div class="card-body">
+                <button class="btn btn-primary" @onclick="() => OnEditGoal(goal)">Editar</button>
+                <h5 class="card-title">@goal.Name</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Fecha creada: @goal.DateCreated</h6>
+                <p class="card-text">Tareas completadas: @CalculateCompletedTasksCount(goal.Activities)</p>
+                <p class="card-text">------------------</p>
+            </div>
+        </div>
+    }
+</div>
+
+<Modal @ref="modal" Title="@modalTitle" OnButtonClickAccept="@OnModalAccept">
+    <AddModal inputValue="@inputValue" inputValueChanged="@InputValueChanged"></AddModal>
+</Modal>
+
+@code {
+    [Parameter] public Action<GoalDto> OnSelectGoal { get; set; }
+
+    Modal modal;
+    List<GoalDto> listGoals = new List<GoalDto>();
+    GoalDto goalEditing;
+    string modalTitle;
+    string inputValue;
+    bool isEditMode;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadList();
+    }
+
+    async Task LoadList()
+    {
+        listGoals = await GoalService.GetAll();
+    }
+
+    void OnNewGoal() => OpenModal("Agregar nueva meta");
+
+    void OnEditGoal(GoalDto goal)
+    {
+        goalEditing = goal;
+        inputValue = goal.Name;
+        isEditMode = true;
+        OpenModal("Editar meta");
+        StateHasChanged();
+    }
+
+    async void OnModalAccept()
+    {
+        if (isEditMode)
+            await UpdateGoal();
+        else
+            await CreateGoal();
+
+        StateHasChanged();
+    }
+
+    async Task UpdateGoal()
+    {
+        await GoalService.Update(goalEditing.Id, new GoalRequestModel { Name = inputValue });
+        modal.Active = false;
+        inputValue = string.Empty;
+        await LoadList();
+    }
+
+    async Task CreateGoal()
+    {
+        await GoalService.Add(new GoalRequestModel { Name = inputValue });
+        modal.Active = false;
+        inputValue = string.Empty;
+        await LoadList();
+    }
+
+    void OpenModal(string title)
+    {
+        modalTitle = title;
+        modal.Active = true;
+    }
+
+    private void InputValueChanged(string newValue)
+    {
+        inputValue = newValue;
+    }
+
+    private int CalculateCompletedTasksCount(IEnumerable<ActivityDto> activities)
+    {
+        return activities.Count(activity => activity.Completed);
+    }
+}

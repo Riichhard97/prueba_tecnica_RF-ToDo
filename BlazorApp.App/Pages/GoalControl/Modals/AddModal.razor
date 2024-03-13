@@ -1,0 +1,19 @@
+﻿<!-- Componente ChildComponent.razor -->
+<div>
+    <input class="form-control" @bind-value="inputValue" @oninput="OnInputValueChanged" />
+</div>
+
+@code {
+    [Parameter]
+    public string inputValue { get; set; }
+
+    [Parameter]
+    public EventCallback<string> inputValueChanged { get; set; }
+
+    // Método que se ejecutará cuando cambie el valor del input
+    private async Task OnInputValueChanged(ChangeEventArgs e)
+    {
+        inputValue = e.Value.ToString(); // Actualiza el valor del input en el componente hijo
+        await inputValueChanged.InvokeAsync(inputValue); // Notifica al componente padre sobre el cambio
+    }
+}
