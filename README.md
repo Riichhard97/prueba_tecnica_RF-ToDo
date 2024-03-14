@@ -1,56 +1,46 @@
-# prueba_tecnica_RF-ToDo
-# Bienvenidos
-Esta prueba tecnica es un mini modulo/proyecto creado con .Net 7, utilizando Blazor en la App y la Api REST fue creada bajo la arquitectura clean archiquecture.
+# Prueba Tecnica RF-ToDo
 
-Un poco de la App: 
+## Bienvenidos
+
+Esta prueba técnica consiste en un mini módulo/proyecto creado con .Net 7, utilizando Blazor en la App y la API REST fue desarrollada bajo la arquitectura Clean Architecture.
+
+### Un poco de la App: 
+
 Blazor ofrece las siguientes ventajas:
 
-°Interfaz de usuario dinámica y receptiva.
-°Desarrollo de aplicaciones web con C# en lugar de JavaScript.
-°Integración con el ecosistema .NET para un desarrollo más rápido y seguro.
-°Capacidad para crear aplicaciones de una sola página (SPA) y aplicaciones web progresivas (PWA).
+- Interfaz de usuario dinámica y receptiva.
+- Desarrollo de aplicaciones web con C# en lugar de JavaScript.
+- Integración con el ecosistema .NET para un desarrollo más rápido y seguro.
+- Capacidad para crear aplicaciones de una sola página (SPA) y aplicaciones web progresivas (PWA).
 
-Configurar App:
--Por las prisas se dejo "hardcoreado" la url de la api para nuestro servicio HttpClient, este se deberá modificar ubicado en Program.cs dentro de la App.
+### Configurar la App:
 
-<img width="664" alt="image" src="https://github.com/Riichhard97/prueba_tecnica_RF-ToDo/assets/62078290/eeea6188-9ac3-4424-9b81-4a220c733af9">
+Debido a las prisas, la URL de la API para nuestro servicio HttpClient se dejó "hardcodeada" y deberá modificarse ubicada en `Program.cs` dentro de la App.
 
-#Un poco de la Api:
-<img width="240" alt="image" src="https://github.com/Riichhard97/prueba_tecnica_RF-ToDo/assets/62078290/d43df813-892a-4e23-969d-c135b69ac87a">
-Estructura de api.
+![Configuración de la URL de la API](https://github.com/Riichhard97/prueba_tecnica_RF-ToDo/assets/62078290/eeea6188-9ac3-4424-9b81-4a220c733af9)
 
-## Proyecto con Clean Architecture en ASP.NET 7
+### Un poco de la Api:
+
+![Estructura de la API](https://github.com/Riichhard97/prueba_tecnica_RF-ToDo/assets/62078290/d43df813-892a-4e23-969d-c135b69ac87a)
+
 Aquí hemos implementado la arquitectura Clean Architecture. Esta arquitectura nos permite crear sistemas altamente mantenibles, testables y escalables.
 
-## ¿Qué es Clean Architecture?
-Clean Architecture es un enfoque de diseño de software que se centra en la separación de preocupaciones y la independencia de frameworks externos. Se basa en los principios SOLID y promueve la creación de sistemas altamente mantenibles, testables y escalables.
-
-## Ventajas de Clean Architecture
-Independencia de Frameworks: Los detalles de la infraestructura, como las bases de datos o los frameworks de UI, están separados de la lógica de negocio, lo que facilita la adaptación a cambios tecnológicos.
-
-Testabilidad: La separación de capas permite escribir pruebas unitarias y de integración de forma más sencilla, ya que la lógica de negocio no está acoplada a la infraestructura.
-
-Mantenibilidad: La arquitectura limpia fomenta la modularidad y la cohesión, lo que facilita la identificación y el mantenimiento de diferentes componentes del sistema.
-
-Escalabilidad: Al tener una estructura bien definida y desacoplada, es más fácil escalar y extender la aplicación a medida que los requisitos cambian o crecen.
-
-## Coleccion exportado endpoints PostMan.
-Dentro de la carpeta "Coleccion para postman" viene la coleccion, con las variables configuradas y los endpoints existentes.
-
 ## Requerimientos para Ejecutar la API
+
 - Antes de ejecutar la API, asegúrate de tener PostgreSQL instalado y una base de datos vacía.
-- Instalar el SDK de .NET 7: Asegúrate de tener instalado el SDK de .NET 5 en tu máquina. Puedes descargarlo desde el sitio web oficial de .NET.
-- Los siguientes pasos tambien incluye utilizar Visual Studio, de preferencia tenerlo instalado.
+- Instala el SDK de .NET 7 desde el sitio web oficial de .NET.
+- Se recomienda tener Visual Studio instalado para facilitar el desarrollo.
+
 ## Pasos para Ejecutar la API:
-Abrir el Proyecto: Abre la solución de tu proyecto ASP.NET Core 5 en tu entorno de desarrollo favorito, como Visual Studio.
 
-### Configuración de la API:
-Revisa y ajusta el archivo appsettings.Development.json para configurar las variables de conexión a la base de datos ### ConnectionStrings.APP.
-<img width="868" alt="image" src="https://github.com/Riichhard97/prueba_tecnica/assets/62078290/70fad1d4-c6b2-4687-8dc9-148260dd3147">
+1. Abre la solución en tu entorno de desarrollo preferido, como Visual Studio.
+2. Configura las variables de conexión a la base de datos en el archivo `appsettings.Development.json` en la sección `ConnectionStrings.APP`.
+   
+    ![Configuración de la Base de Datos](https://github.com/Riichhard97/prueba_tecnica_RF-ToDo/assets/62078290/70fad1d4-c6b2-4687-8dc9-148260dd3147)
 
-Ejecutar este comando posicionados en persistence. 
-Esto aplicara las migraciones a nuestra base de datos:
-dotnet ef database update --context CoreDbContext --startup-project ../API
+3. Ejecuta el siguiente comando en la terminal desde la carpeta `persistence` para aplicar las migraciones a la base de datos:
+   ```bash
+   dotnet ef database update --context CoreDbContext --startup-project ../API
 
 
 #Capturas
