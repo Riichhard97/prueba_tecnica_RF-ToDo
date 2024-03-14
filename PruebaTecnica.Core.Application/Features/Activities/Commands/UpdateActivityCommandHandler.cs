@@ -17,6 +17,10 @@ namespace PruebaTecnica.Core.Application.Features.Activities.Commands
         {
             var obj = await _context.Activity.FirstOrDefaultAsync((obj) => obj.Id == request.Id);
 
+            var someWithSameName = await _context.Activity.AnyAsync(Activity => Activity.Name == request.Name && Activity.GoalId == obj.GoalId && obj.Id != Activity.Id);
+            if (someWithSameName)
+                throw new Exception("El nombre de la actividad ya existe.");
+
             if(request.Name != null)
                 obj.Name = request.Name;
 

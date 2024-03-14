@@ -7,9 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PruebaTecnica.Core.Application.Features.Goals.Queries
+namespace PruebaTecnica.Core.Application.Features.Activities.Queries
 {
-    public class ListAllGoalQuery : PaginationRequestModel, IQuery<PaginationResponseModel<GoalDto>>
+    public class ListActivitiesByGoalIdQuerys : PaginationRequestModel,IQuery<PaginationResponseModel<ActivityDto>>
     {
+        public int GoalId { get; set; }
     }
 }

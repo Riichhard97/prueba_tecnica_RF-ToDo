@@ -21,20 +21,27 @@
 
   <div style="display:flex">
         <div style="width: 30%; padding: 10px;">
-            <GoalList OnSelectGoal=@OnSelectGoal ></GoalList>
+            <GoalList @ref="goalListRef" OnSelectGoal=@OnSelectGoal></GoalList>
       </div>
         <div style="width: -webkit-fill-available;padding:5px">
-            <GoalConfigActivities GoalId="@GoalId"></GoalConfigActivities>
+            <GoalConfigActivities OnListRefresh=@HandleListNeedChange Goal="@goal"></GoalConfigActivities>
         </div>
   </div>
 </div>
 @code {
-    int GoalId = 0;
+    GoalDto goal;
+    private GoalList goalListRef;
 
-    void OnSelectGoal(GoalDto goal)
+
+    void OnSelectGoal(GoalDto selectedGoal)
     {
-        GoalId = goal.Id;
+        goal = selectedGoal;
         StateHasChanged();
+    }
+
+    private void HandleListNeedChange()
+    {
+        goalListRef.LoadList();
     }
 
 }

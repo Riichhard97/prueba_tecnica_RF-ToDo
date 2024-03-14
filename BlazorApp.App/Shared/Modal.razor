@@ -1,7 +1,10 @@
-﻿<div class="modal @CssClass" tabindex="-1" role="dialog" style="display: @( @Active == true  ? "block" : "none")">
+﻿@inject IJSRuntime JS
+
+<div class="modal-backdrop fade @(Active ? "show" : "")" style="display: @(Active ? "block" : "none")"></div>
+<div class="modal @CssClass" tabindex="-1" role="dialog" style="display: @(Active ? "block" : "none"); position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1050;">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header background-color-primary">
                 <h5 class="modal-title">@Title</h5>
                 <button type="button" class="btn-close" aria-label="Close" @onclick="Close"></button>
             </div>
@@ -9,8 +12,8 @@
                 @ChildContent
             </div>
             <div class="modal-footer" style="margin-left: auto; margin-right: auto;">
-                <div >
-                    <button type="button" class="btn btn-primary" @onclick="OnButtonClickAccept">Aceptar</button>
+                <div>
+                    <button type="button" class="btn background-color-primary" @onclick="OnButtonClickAccept">Aceptar</button>
                     <button type="button" class="btn btn-secondary" @onclick="Close">Cerrar</button>
                 </div>
             </div>
@@ -24,9 +27,6 @@
     [Parameter] public string CssClass { get; set; } = "";
     [Parameter] public bool Active { get; set; } = false;
     [Parameter] public Action OnButtonClickAccept { get; set; }
+    [Parameter] public Action Close { get; set; }
 
-    public void Close()
-    {
-        Active = false;
-    }
 }

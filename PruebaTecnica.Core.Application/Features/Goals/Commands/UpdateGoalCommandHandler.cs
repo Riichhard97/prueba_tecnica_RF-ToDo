@@ -19,6 +19,10 @@ namespace PruebaTecnica.Core.Application.Features.Goals.Commands
 
         public async Task<Unit> Handle(UpdateGoalCommand request, CancellationToken cancellationToken)
         {
+            var someWithSameName = await _context.Goal.AnyAsync(Goal => Goal.Name == request.Name && Goal.Id != request.Id);
+            if (someWithSameName)
+                throw new Exception("El nombre de la meta ya existe.");
+            
             var goal = await _context.Goal.FirstOrDefaultAsync<Goal>((obj) => obj.Id == request.Id);
             goal.Name = request.Name;
 

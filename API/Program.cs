@@ -46,10 +46,10 @@ app.Use(async (ctx, next) =>
 	{
 		await next();
 	}
-	catch (Exception)
+	catch (HttpRequestException ex)
 	{
-		ctx.Response.StatusCode = 500;
-		await ctx.Response.WriteAsync("Ha Ocurrido un error inesperado");
+		ctx.Response.StatusCode = 200;
+		await ctx.Response.WriteAsJsonAsync(ex.Message);
 	}
 });
 

@@ -1,0 +1,112 @@
+@if (TotalPages > 0)
+{
+    <nav aria-label="Page navigation">
+        <ul class="pagination" style="margin:unset">
+            <li class="page-item @FirstDisabled">
+                <button class="page-link" @onclick="FirstPage" aria-label="Primera página">
+                    <span aria-hidden="true">&laquo;</span>
+                </button>
+            </li>
+            <li class="page-item @PreviousDisabled">
+                <button class="page-link" @onclick="PreviousPage" aria-label="Página anterior">
+                    <span aria-hidden="true">&lt;</span>
+                </button>
+            </li>
+
+            @if (CurrentPage > 1)
+            {
+                <li class="page-item">
+                    <button class="page-link" @onclick="(() => SelectPage(1))">1</button>
+                </li>
+                <li class="page-item">
+                    <span class="page-link disabled">.</span>
+                </li>
+            }
+
+            @if (CurrentPage > 2)
+            {
+                <li class="page-item">
+                    <button class="page-link" @onclick="(() => SelectPage(CurrentPage - 1))">@((CurrentPage - 1))</button>
+                </li>
+            }
+
+            <li class="page-item active">
+                <span class="page-link">@CurrentPage</span>
+            </li>
+
+            @if (CurrentPage < TotalPages - 1)
+            {
+                <li class="page-item">
+                    <button class="page-link" @onclick="(() => SelectPage(CurrentPage + 1))">@((CurrentPage + 1))</button>
+                </li>
+            }
+
+            @if (CurrentPage < TotalPages)
+            {
+                <li class="page-item">
+                    <span class="page-link disabled">.</span>
+                </li>
+                <li class="page-item">
+                    <button class="page-link" @onclick="(() => SelectPage(TotalPages))">@TotalPages</button>
+                </li>
+            }
+
+            <li class="page-item @NextDisabled">
+                <button class="page-link" @onclick="NextPage" aria-label="Página siguiente">
+                    <span aria-hidden="true">&gt;</span>
+                </button>
+            </li>
+            <li class="page-item @LastDisabled">
+                <button class="page-link" @onclick="LastPage" aria-label="Última página">
+                    <span aria-hidden="true">&raquo;</span>
+                </button>
+            </li>
+        </ul>
+    </nav>
+}
+
+@code {
+    [Parameter] public int CurrentPage { get; set; }
+    [Parameter] public int TotalPages { get; set; }
+    [Parameter] public EventCallback<int> OnPageSelected { get; set; }
+
+    private string FirstDisabled => CurrentPage == 1 ? "disabled" : "";
+    private string LastDisabled => CurrentPage == TotalPages ? "disabled" : "";
+    private string PreviousDisabled => CurrentPage == 1 ? "disabled" : "";
+    private string NextDisabled => CurrentPage == TotalPages ? "disabled" : "";
+
+    private void SelectPage(int page)
+    {
+        if (page >= 1 && page <= TotalPages && page != CurrentPage)
+        {
+            CurrentPage = page;
+            OnPageSelected.InvokeAsync(CurrentPage);
+        }
+    }
+
+    private void FirstPage()
+    {
+        SelectPage(1);
+    }
+
+    private void LastPage()
+    {
+        SelectPage(TotalPages);
+    }
+
+    private void PreviousPage()
+    {
+        if (CurrentPage > 1)
+        {
+            SelectPage(CurrentPage - 1);
+        }
+    }
+
+    private void NextPage()
+    {
+        if (CurrentPage < TotalPages)
+        {
+            SelectPage(CurrentPage + 1);
+        }
+    }
+}

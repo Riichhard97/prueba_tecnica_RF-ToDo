@@ -1,8 +1,6 @@
-﻿using System.Reflection;
-using System;
+﻿using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using AutoMapper;
-using MediatR;
+using System.Reflection;
 
 namespace PruebaTecnica.Core.Infrestructure
 {

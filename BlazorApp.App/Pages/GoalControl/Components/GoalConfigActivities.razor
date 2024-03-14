@@ -9,24 +9,33 @@
 
 <div style="background-color:white;">
 
-    <div class="p-1 background-color-primary" style="color:white"> Configurar plan de  compesacion</div>
+    <div class="p-1 background-color-primary" style="color:white"> @(Goal != null ? Goal.Name : "Seleccionar meta")</div>
 
     <div style="border:1px solid green;">
         <div class="p-2 border-color-primary " style="border-top:1px solid green;border-bottom:1px solid green;">
-            <button class="btn background-color-primary" disabled=@(GoalId == 0) @onclick=OnNewActivity>Agregar Tarea</button>
-            <button class="btn background-color-primary" disabled=@(GoalId == 0) @onclick=OnSetComplete>Completar Tarea</button>
-            <button class="btn background-color-primary" disabled=@(GoalId == 0) @onclick=OnUpdateActivity>Editar</button>
-            <button class="btn background-color-primary" disabled=@(GoalId == 0) @onclick=OnDeleteActivity>Eliminar</button>
+            <button class="btn background-color-primary" style="margin-right:10px;" disabled=@(Goal == null) @onclick=OnNewActivity>Agregar Tarea</button>
+            @if (activitiesSelected.Count() > 0)
+            {
+                <button class="btn background-color-primary" style="margin-right:10px;" disabled=@(Goal == null) @onclick=OnSetComplete>Completar Tarea</button>
+            }
+            @if (activitiesSelected.Count() == 1)
+            {
+                <button class="btn background-color-primary" style="margin-right:10px;" disabled=@(Goal == null) @onclick=OnUpdateActivity>Editar</button>
+            }
+            @if (activitiesSelected.Count() > 0)
+            {
+                <button class="btn background-color-primary" disabled=@(Goal == null) @onclick=OnDeleteActivity>Eliminar</button>
+            }
         </div>
         <div class="p-2">
-        @if (GoalId == 0)
+        @if (Goal is null)
         {
             <span >Seleccione una meta para visualizar sus actividades</span>
         } else
         {
             <table class="table">
                 <thead class="thead-light">
-                    <tr>
+                  @*  <tr>
                         <th scope="col" colspan="2" class="border-color-primary">
                             <input type="checkbox"  @onchange="ToggleAllCheckboxes" />
                         </th>
@@ -43,7 +52,7 @@
                                 <option value="Open">Abierta</option>
                             </select>
                         </th>
-                    </tr>
+                    </tr>*@
                 </thead>
                 <tbody>
                     @if (activities.Count > 0)
@@ -52,11 +61,19 @@
                         {
                             <tr style="@((item.Selected) ? "background-color:#c2dbff" : "")"
                             >
-                                <td><input type="checkbox" @bind="@item.Selected"/></td>
-                                <td>#</td>
+                                    <td><input type="checkbox" @onclick="(e) => ToggleCheckbox(item, e)" checked="@item.Selected" /></td>
+                                <td><span @onclick="()=>UpdateActivityImportant(item)" style="cursor:pointer">
+                                    @if(!item.Important)
+                                    {
+                                        <i class="bi bi-star"></i>
+                                    } else
+                                    {
+                                        <i class="bi bi-star-fill" style="color:#ffbf00"></i>
+                                    }
+                                </span></td>
                                 <td>@item.Name</td>
                                     <td>@item.DateCreated</td>
-                                    <td>@(item.Completed ? "Completada" : "Abierta")</td>
+                                    <td style="color:@(item.Completed?"green":"black")">@(item.Completed ? "Completada" : "Abierta")</td>
                             </tr>
                         }
                     }
@@ -65,55 +82,75 @@
         }
         </div>
         <div style="border-top:1px solid green;border-bottom:1px solid green;">
-                <button> > </button>
-                <button> => </button>
+            <Pagination CurrentPage="@currentPage" TotalPages="@totalPages" OnPageSelected="@OnPageChanged" />
         </div>
-        @GoalId
     </div>
 </div>
 
-<Modal @ref="modal" Title="@modalTitle" OnButtonClickAccept="@OnModalAccept">
-    <div>
+<Modal @ref="modal" Title="@modalTitle" OnButtonClickAccept="@OnModalAccept" Close="@Close">
+    <div style="display:flex;place-items: center;">
+        <label style="padding-right:10px;">Nombre:</label>
         <input class="form-control" @bind-value="@inputValue" />
     </div>
+    @if (showError && string.IsNullOrWhiteSpace(inputValue))
+    {
+        <div style="color: red;">El nombre es requerido.</div>
+    }
 </Modal>
 
 @code {
     [Parameter] public Action<GoalDto> OnSelectGoal { get; set; }
-    [Parameter] public int GoalId { get; set; }
+    [Parameter] public Action OnListRefresh { get; set; }
 
-    public GoalDto goal;
+    [Parameter] public GoalDto Goal { get; set; }
+
     Modal modal;
     string modalTitle;
     string inputValue;
     bool isEditMode;
     ActivityDtoAndCheckbox activityToEdit;
 
+
     List<ActivityDtoAndCheckbox> activities = new List<ActivityDtoAndCheckbox>();
+    List<ActivityDtoAndCheckbox> activitiesSelected = new List<ActivityDtoAndCheckbox>();
 
-    // Filtros
-    string nameFilter;
-    DateTime? dateFilter;
-    string statusFilter;
-    bool selectAll;
+    private bool showError = false;
 
-    // Filtro y lista filtrada
-    List<ActivityDtoAndCheckbox> filteredItems => activities
-        //.Where(i =>
-        //(string.IsNullOrWhiteSpace(nameFilter) || i.FirstName.Contains(nameFilter, StringComparison.OrdinalIgnoreCase)) &&
-        //(!dateFilter.HasValue || i.Date == dateFilter.Value) &&
-        //(string.IsNullOrWhiteSpace(statusFilter) || i.Status == statusFilter))
-        .ToList();
+    private int currentPage = 1;
+    private int totalPages = 0;
+    private int pageSize = 5;
 
     void OnNewActivity()
     {
         OpenModal("Nueva actividad");
     }
 
+    void ToggleCheckbox(ActivityDtoAndCheckbox item, MouseEventArgs e)
+    {
+        item.Selected = !item.Selected;
+        if (item.Selected)
+        {
+            if (!activitiesSelected.Contains(item))
+            {
+                activitiesSelected.Add(item);
+            }
+        }
+        else
+        {
+            activitiesSelected.Remove(activitiesSelected.FirstOrDefault(activity => activity.Id == item.Id));
+        }
+    }
+
+    private async Task OnPageChanged(int page)
+    {
+        currentPage = page;
+        await GetActivitiesByGoalId();
+    }
+
     async void OnUpdateActivity()
     {
-        var activitiesSelected = activities.Count((activity) => activity.Selected);
-        if (activitiesSelected > 1 || activitiesSelected < 1)
+        var activities = activitiesSelected.Count((activity) => activity.Selected);
+        if (activities > 1 || activities < 1)
         {
             await Swal.FireAsync(new SweetAlertOptions
                 {
@@ -127,15 +164,14 @@
         }
 
         isEditMode = true;
-        activityToEdit = activities.FirstOrDefault(activity=>activity.Selected);
+        activityToEdit = activitiesSelected.FirstOrDefault(activity => activity.Selected);
         inputValue = activityToEdit.Name;
         OpenModal("Editar actividad");
     }
 
     async void OnSetComplete()
     {
-        var activitiesSelectedIds = activities.Where((activity) => activity.Selected).Select(activity=>activity.Id);
-        if(activitiesSelectedIds.Count() == 0)
+        if(!activitiesSelected.Any())
         {
             await Swal.FireAsync(new SweetAlertOptions
             {
@@ -148,24 +184,27 @@
             return;
         }
 
+        var activitiesSelectedIds = activitiesSelected.Select(activity => activity.Id);
+
         await ActivityServices.SetCompleteActivities(new SetCompleteActivitiesRequestModel() {Ids = activitiesSelectedIds.ToList(),isComplete = true });
-        await GetGoalById();
+        await GetActivitiesByGoalId();
+        OnListRefresh.Invoke();
+
         await Swal.FireAsync(new SweetAlertOptions
-            {
-                Title = "Confirmacion",
-                Text = "Se han actualizado las actividades con exito!",
-                Icon = SweetAlertIcon.Success,
-                TimerProgressBar = true,
-                ShowConfirmButton = false,
-                Timer = 1000
-            });
+        {
+            Title = "Confirmacion",
+            Text = "Se han actualizado las actividades con exito!",
+            Icon = SweetAlertIcon.Success,
+            TimerProgressBar = true,
+            ShowConfirmButton = false,
+            Timer = 1000
+        });
         return;
     }
 
     async void OnDeleteActivity()
     {
-        var activitiesSelectedIds = activities.Where((activity) => activity.Selected).Select(activity => activity.Id);
-        if (activitiesSelectedIds.Count() == 0)
+        if (!activitiesSelected.Any())
         {
             await Swal.FireAsync(new SweetAlertOptions
                 {
@@ -177,39 +216,74 @@
                 });
             return;
         }
-        await ActivityServices.DeleteList(new DeleteActivitiesRequestModel() {Ids = activitiesSelectedIds.ToList() });
+        var activitiesSelectedIds = activitiesSelected.Select(activity => activity.Id);
+
         await Swal.FireAsync(new SweetAlertOptions
         {
-            Title = "Confirmacion",
-            Text = "Se han eliminado las actividades con exito!",
-            Icon = SweetAlertIcon.Success,
-            TimerProgressBar = true,
-            ShowConfirmButton = false,
-            Timer = 1000
+            Title = "Estas seguro que quieres eliminar?",
+            Text = "No podrás recuperar las actividades",
+            Icon = SweetAlertIcon.Warning,
+            ShowCancelButton = true,
+            ConfirmButtonText = "Si",
+            CancelButtonText = "No",
+            ConfirmButtonColor = "rgb(51, 102, 102)"
+        }).ContinueWith(async swalTask =>
+        {
+            SweetAlertResult result = swalTask.Result;
+            if (!string.IsNullOrEmpty(result.Value))
+            {
+                await ActivityServices.DeleteList(new DeleteActivitiesRequestModel() { Ids = activitiesSelectedIds.ToList() });
+                await Swal.FireAsync(new SweetAlertOptions
+                    {
+                        Title = "Confirmacion",
+                        Text = "Se han eliminado las actividades con exito!",
+                        Icon = SweetAlertIcon.Success,
+                        TimerProgressBar = true,
+                        ShowConfirmButton = false,
+                        Timer = 1000
+                    });
+                activitiesSelected = new List<ActivityDtoAndCheckbox>();
+                await GetActivitiesByGoalId();
+                StateHasChanged();
+            }
         });
-        await GetGoalById();
-        StateHasChanged();
     }
 
     async void OnModalAccept()
     {
-        if (isEditMode)
-            await Update();
+        if (string.IsNullOrWhiteSpace(inputValue))
+        {
+            showError = true;
+            return;
+        }
         else
-            await Create();
+            showError = false;
 
-        string text = isEditMode ? "Se ha editado con exito!" : "Se ha agregado con exito!";
-        await Swal.FireAsync(new SweetAlertOptions
-            {
-                Title = "Confirmacion",
-                Text = text,
-                Icon = SweetAlertIcon.Success,
-                TimerProgressBar = true,
-                ShowConfirmButton = false,
-                Timer = 1000
-            });
-        return;
-        StateHasChanged();
+        try
+        {
+            if (isEditMode)
+                await Update();
+            else
+                await Create();
+
+            string text = isEditMode ? "Se ha editado con exito!" : "Se ha agregado con exito!";
+            await Swal.FireAsync(new SweetAlertOptions
+                {
+                    Title = "Confirmacion",
+                    Text = text,
+                    Icon = SweetAlertIcon.Success,
+                    TimerProgressBar = true,
+                    ShowConfirmButton = false,
+                    Timer = 1000
+                });
+            OnListRefresh.Invoke();
+            StateHasChanged();
+        }
+        catch (Exception)
+        {
+            //el sweetalert de advertencia ya se abrio desde el servicio con el mensaje del response.
+        }
+     
     }
 
     async Task Update()
@@ -217,45 +291,40 @@
         await ActivityServices.Update(activityToEdit.Id, new UpdateActivityRequestModel { Name = inputValue });
         modal.Active = false;
         inputValue = string.Empty;
-        await GetGoalById();
+        await GetActivitiesByGoalId();
     }
 
     async Task Create()
     {
-        await ActivityServices.Add(new AddActivityRequestModel { Name = inputValue ,GoalId = goal.Id});
+        await ActivityServices.Add(new AddActivityRequestModel { Name = inputValue ,GoalId = Goal.Id});
         modal.Active = false;
         inputValue = string.Empty;
-        await GetGoalById();
+        await GetActivitiesByGoalId();
     }
     protected override async Task OnParametersSetAsync()
     {
-        await GetGoalById();
+        await GetActivitiesByGoalId();
     }
 
-    async Task GetGoalById()
+    async Task GetActivitiesByGoalId()
     {
-        if (GoalId > 0)
+        if (Goal != null)
         {
-            goal = await GoalService.GetById(GoalId);
-            activities = goal.Activities.Select(activity => new ActivityDtoAndCheckbox
+            var responsePaginated = await ActivityServices.GetAllByGoalId(new ListActivitiesByGoalRequestModel() { GoalId = Goal.Id, Page = currentPage, PageSize =pageSize });
+
+            totalPages = responsePaginated.TotalPages;
+
+            activities = responsePaginated.Data.Select(activity => new ActivityDtoAndCheckbox
             {
                 Id = activity.Id,
                 Name = activity.Name,
                 DateCreated = activity.DateCreated,
                 Completed = activity.Completed,
-                Selected = false
+                Important = activity.Important,
+                Selected = activitiesSelected.Any(selectedItem => selectedItem.Id == activity.Id)
             }).ToList();
         }
         StateHasChanged();
-    }
-
-    void ToggleAllCheckboxes(ChangeEventArgs e)
-    {
-        bool newValue = (bool)e.Value;
-        foreach (var item in filteredItems)
-        {
-            item.Selected = newValue;
-        }
     }
 
     public class ActivityDtoAndCheckbox : ActivityDto
@@ -267,6 +336,20 @@
     {
         modalTitle = title;
         modal.Active = true;
+    }
+
+    async void UpdateActivityImportant(ActivityDto activityDto)
+    {
+        activityDto.Important = !activityDto.Important;
+        StateHasChanged();
+
+        await ActivityServices.Update(activityDto.Id, new UpdateActivityRequestModel { Important = activityDto.Important});
+    }
+
+    void Close()
+    {
+        modal.Active = false;
+        showError = false;
     }
 }
 
