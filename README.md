@@ -27,7 +27,7 @@ Aquí hemos implementado la arquitectura Clean Architecture. Esta arquitectura n
 
 ## Requerimientos para Ejecutar la API
 
-- Antes de ejecutar la API, asegúrate de tener PostgreSQL instalado y una base de datos vacía.
+- Antes de ejecutar la API, asegúrate de tener Sql Server instalado y una base de datos vacía.
 - Instala el SDK de .NET 7 desde el sitio web oficial de .NET.
 - Se recomienda tener Visual Studio instalado para facilitar el desarrollo.
 
