@@ -42,27 +42,27 @@ Aquí hemos implementado la arquitectura Clean Architecture. Esta arquitectura n
    ```bash
    dotnet ef database update --context CoreDbContext --startup-project ../API
 
+# Capturas de Pantalla
 
-#Capturas
-A continuacion se mostrarán algunas capturas de pantalla:
+A continuación se muestran algunas capturas de pantalla:
 
-
+**Imagen 1: Listado de Metas**
 <img width="200" alt="Captura de pantalla 2024-03-14 034023" src="https://github.com/Riichhard97/prueba_tecnica_RF-ToDo/assets/62078290/18e3c99e-0ee2-4622-a360-9f0ce5b6ff69">
-Imagen 1: Listado de metas.
 
+**Imagen 2: Listado de Tareas**
 <img width="635" alt="image" src="https://github.com/Riichhard97/prueba_tecnica_RF-ToDo/assets/62078290/bc0c25ad-132d-4fae-91f8-592e70bf062f">
-Imagen 2: Listado de Tareas.
 
+**Imagen 3: Modal para Agregar Nuevas Metas**
 <img width="215" alt="image" src="https://github.com/Riichhard97/prueba_tecnica_RF-ToDo/assets/62078290/ecf9dcd4-fafe-4055-8eb3-fa349258e41d">
-Imagen 3: Modal para agregar nuevas metas.
 
+**Imagen 4: Modal para Editar Metas**
 <img width="205" alt="image" src="https://github.com/Riichhard97/prueba_tecnica_RF-ToDo/assets/62078290/ea48c17b-0075-4094-ac18-a5f281a7d4da">
-Imagen 4: Modal para editar metas.
 
+**Imagen 5: Mensajes de Confirmación**
 <img width="203" alt="image" src="https://github.com/Riichhard97/prueba_tecnica_RF-ToDo/assets/62078290/fb461108-11f7-4c3a-b5a0-10c5c92e21e9">
-Imagen 5: Mensajes de confirmacion.
 
+**Imagen 6: Mensajes de Advertencia**
 <img width="201" alt="image" src="https://github.com/Riichhard97/prueba_tecnica_RF-ToDo/assets/62078290/fdf63e4d-b870-4deb-9639-b16e0e1cd16a">
-Imagen 5: Mensajes de advertencia.
+
 
 
